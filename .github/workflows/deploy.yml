@@ -1,89 +1,62 @@
-name: Deploy main branch
+name: Build and deploy
 
 on:
   push:
-    branches:
+    branches: 
       - main
-    paths:
-      - src/**/*.*
   workflow_dispatch:
-  schedule:
-    - cron: "0 12 1 1,12 *" # At 12:00 on January 1st & December 1st
-
-concurrency:
-  group: ${{ github.workflow }}
-  cancel-in-progress: true
 
 jobs:
-  ci:
+  deploy:
     runs-on: ubuntu-latest
     permissions:
       contents: write
 
     steps:
-      - name: checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: setup workspace
-        uses: ./.github/actions/ci
-  build:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-
-    steps:
-      - name: checkout
-        uses: actions/checkout@v4
-
-      - name: setup workspace
-        uses: ./.github/actions/setup
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          setup-dprint: true
+          node-version: '23'
 
-      - name: build plugins
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: '10.10.0'
+          run_install: false
+
+      - name: Get pnpm store directory
+        id: pnpm-cache
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_OUTPUT
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build plugin(s)
         run: pnpm build
 
-      - name: update stuff
-        if: ${{ !env.ACT }}
+      - name: Copy additional files
         run: |
-          if [ ! -z "$(git status -s)" ]; then
-            git add .
-            git commit -m "chore: update docs and lang" || true
-            git pull --ff-only
-            git push
-          fi
-        shell: bash
+          cp README.md dist/README.md
+          printf -- "---\npermalink: /404.html\n---\n" > dist/404.md
+          printf -- "> **Note:** You accessed a link that returned a 404, probably by clicking one of the plugin links. You're supposed to copy the link address and add it into Revenge.\n\n" >> dist/404.md
+          cat README.md >> dist/404.md
 
-      - name: copy readme and assets
-        run: |
-          cp README.md dist/index.md
-          cp -r assets dist/assets
-          cp scripts/serve/plink.ico dist/favicon.ico
-
-      - name: build pages
-        uses: actions/jekyll-build-pages@v1
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          source: dist
-          destination: built
-
-      - name: upload pages artifact
-        uses: actions/upload-pages-artifact@v3
-        if: ${{ !env.ACT }}
-        with:
-          path: built
-  deploy:
-    needs: build
-
-    permissions:
-      pages: write
-      id-token: write
-
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-
-    runs-on: ubuntu-latest
-    steps:
-      - name: deploy to pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          enable_jekyll: true
