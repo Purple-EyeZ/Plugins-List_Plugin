@@ -72,7 +72,7 @@ async function buildPlugin(
 
 	await build({
 		entryPoints: [join("src/plugins", plugin, manifest.main)],
-		inject: ["scripts/build/modules/workers/migration-shim.ts"],
+		// inject: ["scripts/build/modules/workers/migration-shim.ts"],
 		bundle: true,
 		outfile: join("dist", plugin, "index.js"),
 		format: "iife",

@@ -72,6 +72,16 @@ Icons used by plugins are stored in the `<iconpack root>/_/external/` folder. He
 - <img src="../src/plugins/plugin-browser/assets/SortNameAZIcon.png" alt="PluginBrowser SortNameAZIcon" width=20 height=20 /> — `PluginBrowser/SortNameAZIcon.png`
 - <img src="../src/plugins/plugin-browser/assets/SortNameZAIcon.png" alt="PluginBrowser SortNameZAIcon" width=20 height=20 /> — `PluginBrowser/SortNameZAIcon.png`
 
+### PluginsList
+
+- <img src="../src/plugins/plugins-list/assets/PluginsListIcon2.png" alt="PluginsList PluginsListIcon2" width=20 height=20 /> — `PluginsList/PluginsListIcon2.png`
+- <img src="../src/plugins/plugins-list/assets/SortBrokenIcon.png" alt="PluginsList SortBrokenIcon" width=20 height=20 /> — `PluginsList/SortBrokenIcon.png`
+- <img src="../src/plugins/plugins-list/assets/SortDateNewestIcon.png" alt="PluginsList SortDateNewestIcon" width=20 height=20 /> — `PluginsList/SortDateNewestIcon.png`
+- <img src="../src/plugins/plugins-list/assets/SortDateOldestIcon.png" alt="PluginsList SortDateOldestIcon" width=20 height=20 /> — `PluginsList/SortDateOldestIcon.png`
+- <img src="../src/plugins/plugins-list/assets/SortNameAZIcon.png" alt="PluginsList SortNameAZIcon" width=20 height=20 /> — `PluginsList/SortNameAZIcon.png`
+- <img src="../src/plugins/plugins-list/assets/SortNameZAIcon.png" alt="PluginsList SortNameZAIcon" width=20 height=20 /> — `PluginsList/SortNameZAIcon.png`
+- <img src="../src/plugins/plugins-list/assets/SortWorkingIcon.png" alt="PluginsList SortWorkingIcon" width=20 height=20 /> — `PluginsList/SortWorkingIcon.png`
+
 ### SongSpotlight
 
 - 📂 `SongSpotlight/player/`

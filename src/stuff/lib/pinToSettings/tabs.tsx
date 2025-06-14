@@ -24,7 +24,12 @@ export function patchTabsUI(tabs: PinToSettingsTabs, patches: (() => void)[]) {
 			type: "pressable",
 			title: tabs.title,
 			icon: tabs.icon,
-			IconComponent: tabs.icon && (() => <TableRowIcon source={tabs.icon} />),
+			IconComponent: tabs.icon && (() => {
+				const actualIconSource = (typeof tabs.icon === 'object' && tabs.icon.uri !== undefined)
+					? tabs.icon.uri
+					: tabs.icon;
+				return <TableRowIcon source={actualIconSource} />;
+			}),
 			usePredicate: tabs.predicate,
 			useTrailing: tabs.trailing,
 			onPress: () => {
