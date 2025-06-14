@@ -12,10 +12,29 @@ export default function TextBadge({
 	shiny,
 }: React.PropsWithChildren<{
 	style?: ViewStyle;
-	variant: "primary" | "danger";
+	variant: "primary" | "danger" | "success" | "warning";
 	shiny?: boolean;
 }>) {
 	const [width, setWidth] = React.useState(0);
+
+	const variantColors = {
+		primary: {
+			background: semanticColors.REDESIGN_BUTTON_PRIMARY_BACKGROUND,
+			text: semanticColors.REDESIGN_BUTTON_PRIMARY_TEXT
+		},
+		danger: {
+			background: "#ed443e",
+			text: "#ffffff"
+		},
+		success: {
+			background: "#43b581",
+			text: "#ffffff"
+		},
+		warning: {
+			background: "#faa61a",
+			text: "#ffffff"
+		}
+	};
 
 	const styles = stylesheet.createThemedStyleSheet({
 		main: {
@@ -25,12 +44,8 @@ export default function TextBadge({
 			borderRadius: 2147483647,
 			paddingHorizontal: 6,
 			paddingVertical: 3,
-			backgroundColor: semanticColors[
-				`REDESIGN_BUTTON_${variant.toUpperCase()}_BACKGROUND`
-			],
-			color: semanticColors[
-				`REDESIGN_BUTTON_${variant.toUpperCase()}_TEXT`
-			],
+			backgroundColor: variantColors[variant].background,
+			color: variantColors[variant].text,
 			marginTop: 3,
 			overflow: "hidden",
 		},

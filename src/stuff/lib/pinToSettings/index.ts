@@ -4,7 +4,7 @@ import { patchTabsUI } from "./tabs";
 export interface PinToSettingsTabs {
 	key: string;
 	title: () => string;
-	icon?: number;
+	icon?: number | { uri: any };
 	predicate?: () => boolean;
 	trailing?: () => React.ReactNode;
 	page: React.ComponentType;
