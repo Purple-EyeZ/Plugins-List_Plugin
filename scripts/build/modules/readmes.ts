@@ -9,7 +9,7 @@ import { listPlugins } from "./plugins.ts";
 const mdNote = makeMdNote("scripts/build/modules/readmes.ts", "md");
 const links = {
 	proxied: "https://bn-plugins.github.io/vd-proxy/vendetta.nexpid.xyz/",
-	base: "https://revenge.nexpid.xyz/",
+	base: "https://purple-eyez.github.io/Plugins-List_Plugin/",
 	code: "./plugins/",
 	external: {
 		backend: "https://github.com/nexpid/",
