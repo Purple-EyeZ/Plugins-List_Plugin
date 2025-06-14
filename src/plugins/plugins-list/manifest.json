@@ -1,10 +1,14 @@
 {
-	"name": "Plugin Browser",
-	"description": "Browse all proxied plugins",
+	"name": "Plugins List",
+	"description": "A modified version of Nexpid's plugin browser that uses https://plugins-list.pages.dev as source.",
 	"authors": [
 		{
 			"name": "nexpid",
 			"id": "853550207039832084"
+		},
+		{
+			"name": "Purple_Ξye™",
+			"id": "646535537334812682"
 		}
 	],
 	"main": "src/index.ts",

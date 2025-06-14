@@ -2,14 +2,32 @@ import { clipboard, React, ReactNative as RN, url } from "@vendetta/metro/common
 import { installPlugin, plugins, removePlugin } from "@vendetta/plugins";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { showToast } from "@vendetta/ui/toasts";
+import { findByProps } from "@vendetta/metro";
+import { semanticColors } from "@vendetta/ui";
 
 import TextBadge from "$/components/TextBadge";
+import Text from "$/components/Text";
+import { resolveSemanticColor } from "$/types";
 
-import { lang, vstorage } from "..";
-import constants from "../stuff/constants";
-import { matchGithubLink, properLink } from "../stuff/util";
+import { lang } from "..";
 import type { FullPlugin } from "../types";
 import Card from "./Card";
+
+const { openAlert } = findByProps("openAlert", "dismissAlert");
+const { AlertModal, AlertActions, AlertActionButton } = findByProps("AlertModal", "AlertActions", "AlertActionButton");
+
+const getStatusVariant = (status: FullPlugin["status"]): "success" | "danger" | "warning" | "primary" => {
+	switch (status) {
+		case "working":
+			return "success";
+		case "broken":
+			return "danger";
+		case "warning":
+			return "warning";
+		default:
+			return "primary";
+	}
+};
 
 export default function PluginCard({
 	item,
@@ -18,31 +36,12 @@ export default function PluginCard({
 	item: FullPlugin;
 	changes: string[];
 }) {
-	const { usableLink, trueLink, proxiedLink, githubLink } = React.useMemo(() => {
-		const id = item.vendetta.original;
-		const trueLink = `https://${
-			id.replace(/^vendetta\.nexpid\.xyz\//, "revenge.nexpid.xyz/")
-		}`;
-		const proxiedLink = `${constants.proxyUrl}${id}`;
+	const usableLink = item.installUrl;
+	const githubLink = item.sourceUrl;
 
-		let usableLink = vstorage.dangerZone ? trueLink : proxiedLink;
-		if (!vstorage.dangerZone && plugins[trueLink]) usableLink = trueLink;
+	const isNew = React.useMemo(() => changes.includes(usableLink), [changes, usableLink]);
 
-		return {
-			usableLink,
-			trueLink,
-			proxiedLink,
-			githubLink: matchGithubLink(item.vendetta.original),
-		};
-	}, [item]);
-
-	const isNew = React.useMemo(
-		() => changes.includes(properLink(item.vendetta.original)),
-		[changes, item],
-	);
-	const isDisabled = !!item.bunny?.disabled;
-
-	const [status, setStatus] = React.useState<{
+	const [statusState, setStatusState] = React.useState<{
 		hasPlugin: boolean;
 		pending: boolean;
 	}>({
@@ -51,15 +50,15 @@ export default function PluginCard({
 	});
 
 	React.useEffect(() => {
-		setStatus({
+		setStatusState({
 			hasPlugin: !!plugins[usableLink],
 			pending: false,
 		});
-	}, [item]);
+	}, [item, usableLink]);
 
-	const installFunction = async () => {
-		if (status.pending || isDisabled) return;
-		setStatus({
+	const performInstall = async () => {
+		if (statusState.pending) return;
+		setStatusState({
 			hasPlugin: !!plugins[usableLink],
 			pending: true,
 		});
@@ -91,59 +90,108 @@ export default function PluginCard({
 			getAssetIDByName(shouldRemove ? "TrashIcon" : "DownloadIcon"),
 		);
 
-		setStatus({
+		setStatusState({
 			hasPlugin: !!plugins[usableLink],
 			pending: false,
 		});
 	};
 
+	const installFunction = async () => {
+		if (statusState.pending) return;
+
+		const shouldRemove = !!plugins[usableLink];
+
+		if (!shouldRemove && (item.status === "broken" || item.status === "warning")) {
+			const defaultMessage = item.status === "broken"
+				? "Installing broken plugins may crash your client or cause unexpected behavior."
+				: "This plugin may not work as expected.";
+
+			openAlert("plugin-install-warning", (
+				<AlertModal
+					title="Warning!"
+					content={<Text variant="text-md/semibold" color="TEXT_NORMAL">{defaultMessage}</Text>}
+					extraContent={item.warningMessage && (
+						<RN.View style={{
+							backgroundColor: resolveSemanticColor(semanticColors.BACKGROUND_SECONDARY),
+							borderRadius: 8,
+							padding: 12,
+						}}>
+							<Text variant="text-md/normal" color="TEXT_MUTED">
+								{item.warningMessage}
+							</Text>
+						</RN.View>
+					)}
+					actions={
+						<AlertActions>
+							<AlertActionButton
+								text="Install Anyway"
+								variant="primary"
+								onPress={async () => {
+									await performInstall();
+								}}
+							/>
+							<AlertActionButton
+								text="Cancel"
+								variant="secondary"
+							/>
+						</AlertActions>
+					}
+				/>
+			));
+			return;
+		}
+		await performInstall();
+	};
+
 	return (
 		<Card
 			headerLabel={item.name}
-			headerSuffix={isNew && (
-				<TextBadge
-					variant="primary"
-					style={{ marginLeft: 4 }}
-					shiny
-				>
-					{lang.format("browser.plugin.new", {})}
-				</TextBadge>
-			)}
+			headerSuffix={
+				<RN.View style={{ flexDirection: "row", alignItems: "center" }}>
+					{item.status && (
+						<TextBadge
+							variant={getStatusVariant(item.status)}
+							style={{ marginRight: 4 }}
+						>
+							{item.status}
+						</TextBadge>
+					)}
+					{isNew && (
+						<TextBadge
+							variant="primary"
+							style={{ marginRight: 4 }}
+							shiny
+						>
+							{lang.format("browser.plugin.new", {})}
+						</TextBadge>
+					)}
+				</RN.View>
+			}
 			highlight={!!isNew}
-			headerSublabel={item.authors[0]
-				&& `by ${item.authors.map(x => x.name).join(", ")}`}
-			headerIcon={getAssetIDByName(item.vendetta.icon ?? "")}
+			headerSublabel={item.authors && item.authors.length > 0
+				? `by ${item.authors.join(", ")}`
+				: undefined}
 			descriptionLabel={item.description}
 			overflowTitle={item.name}
-			actions={!isDisabled
-				? [
-					{
-						icon: status.hasPlugin
-							? "TrashIcon"
-							: "DownloadIcon",
-						disabled: status.pending,
-						loading: status.pending,
-						isDestructive: status.hasPlugin,
-						onPress: installFunction,
-					},
-				]
-				: []}
+			actions={[
+				{
+					icon: statusState.hasPlugin ? "TrashIcon" : "DownloadIcon",
+					disabled: statusState.pending,
+					loading: statusState.pending,
+					isDestructive: statusState.hasPlugin,
+					onPress: installFunction,
+				},
+			]}
 			overflowActions={[
-				...(!isDisabled
-					? [
-						{
-							label: lang.format(
-								status.hasPlugin ? "sheet.plugin.uninstall" : "sheet.plugin.install",
-								{},
-							),
-							icon: status.hasPlugin
-								? "TrashIcon"
-								: "DownloadIcon",
-							isDestructive: status.hasPlugin,
-							onPress: installFunction,
-						},
-					]
-					: []),
+				{
+					label: lang.format(
+						statusState.hasPlugin ? "sheet.plugin.uninstall" : "sheet.plugin.install",
+						{},
+					),
+					icon: statusState.hasPlugin ? "TrashIcon" : "DownloadIcon",
+					isDestructive: statusState.hasPlugin,
+					onPress: installFunction,
+				},
 				{
 					label: lang.format("sheet.plugin.copy_plugin_link", {}),
 					icon: "CopyIcon",
@@ -155,53 +203,26 @@ export default function PluginCard({
 						clipboard.setString(usableLink);
 					},
 				},
-				{
-					label: lang.format(
-						vstorage.dangerZone
-							? "sheet.plugin.copy_proxied_link"
-							: "sheet.plugin.copy_unproxied_link",
-						{},
-					),
-					icon: "CopyIcon",
-					onPress: () => {
-						showToast(
-							lang.format("toast.copy_link", {}),
-							getAssetIDByName("CopyIcon"),
-						);
-						clipboard.setString(vstorage.dangerZone ? proxiedLink : trueLink);
-					},
-				},
 				...(githubLink
 					? [
 						{
-							label: lang.format(
-								"sheet.plugin.open_github",
-								{},
-							),
+							label: lang.format("sheet.plugin.open_github", {}),
 							icon: "img_account_sync_github_white",
 							onPress: async () => {
 								showToast(
 									lang.format("toast.open_link", {}),
 									getAssetIDByName("LinkExternalSmallIcon"),
 								);
-								if (
-									await RN.Linking.canOpenURL(
-										"https://github.com",
-									)
-								) {
-									// the website redirects to the actual default branch, while the app doesn't
-									// so we have to fix the link manually
-									const { url } = await fetch(githubLink, {
-										redirect: "follow",
-									});
-									RN.Linking.openURL(url);
-								} else url.openURL(githubLink);
+								if (await RN.Linking.canOpenURL(githubLink)) {
+									RN.Linking.openURL(githubLink);
+								} else {
+									url.openURL(githubLink);
+								}
 							},
 						},
 					]
 					: []),
 			]}
-			disabled={isDisabled}
 		/>
 	);
 }

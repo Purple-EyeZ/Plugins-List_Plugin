@@ -2,29 +2,34 @@ import { safeFetch } from "@vendetta/utils";
 
 import { vstorage } from "..";
 import type { FullPlugin } from "../types";
-import constants from "./constants";
 import { properLink } from "./util";
 
 let lastPluginCache = new Array<string>();
+
 export function getChanges(): string[] {
-	if (!lastPluginCache[0] || !vstorage.pluginCache[0]) return [];
-	return lastPluginCache.filter(id => !vstorage.pluginCache.includes(id));
+    if (!lastPluginCache.length || !vstorage.pluginCache?.length) return [];
+    return lastPluginCache.filter(id => !vstorage.pluginCache.includes(id));
 }
 
 export function updateChanges() {
-	vstorage.pluginCache = lastPluginCache;
+    vstorage.pluginCache = [...lastPluginCache];
 }
 
-export async function run(data?: FullPlugin[]) {
-	const res = data
-		?? ((await (
-			await safeFetch(`${constants.proxyUrl}plugins.json`, {
-				cache: "no-store",
-			})
-		).json()) as FullPlugin[]);
-	lastPluginCache = res.map(x =>
-		typeof x === "string" ? properLink(x) : properLink(x.vendetta.original)
-	);
+export async function run() {
+    try {
+        const response = await safeFetch("https://plugins-list.pages.dev/plugins-data.json", {
+            cache: "no-store",
+        });
+        if (!response.ok) {
+            console.error("[PluginChecker] Failed to fetch plugin list, status:", response.status);
+            return;
+        }
+        const pluginData = await response.json() as FullPlugin[];
+
+        lastPluginCache = pluginData.map(plugin => properLink(plugin.installUrl));
+    } catch (error) {
+        console.error("[PluginChecker] Error fetching or processing plugin list:", error);
+    }
 }
 
 export function initThing(): () => void {

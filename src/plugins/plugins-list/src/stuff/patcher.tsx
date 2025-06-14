@@ -1,7 +1,5 @@
 import { plugin } from "@vendetta";
 import { React } from "@vendetta/metro/common";
-import { manifest } from "@vendetta/plugin";
-import { getAssetIDByName } from "@vendetta/ui/assets";
 
 import TextBadge from "$/components/TextBadge";
 import { patchSettingsPin } from "$/lib/pinToSettings";
@@ -9,6 +7,7 @@ import { patchSettingsPin } from "$/lib/pinToSettings";
 import { lang } from "..";
 import PluginBrowserPage from "../components/pages/PluginBrowserPage";
 import { getChanges, initThing } from "./pluginChecker";
+import PluginsListIcon from "../../assets/PluginsListIcon2.png";
 
 export let pluginsEmitter: Emitter;
 
@@ -17,7 +16,7 @@ export default (): () => void => {
 	patches.push(
 		patchSettingsPin({
 			key: plugin.manifest.name,
-			icon: getAssetIDByName(manifest.vendetta?.icon ?? ""),
+			icon: { uri: PluginsListIcon },
 			trailing: () => {
 				const changes = React.useRef(
 					Object.keys(getChanges()).length,

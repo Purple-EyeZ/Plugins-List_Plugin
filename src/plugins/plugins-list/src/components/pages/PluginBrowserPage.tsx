@@ -11,18 +11,20 @@ import { IconButton } from "$/lib/redesign";
 import { managePage } from "$/lib/ui";
 
 import { lang } from "../..";
-import constants from "../../stuff/constants";
-import { getChanges, run, updateChanges } from "../../stuff/pluginChecker";
+import { getChanges, updateChanges, run as runPluginChecker } from "../../stuff/pluginChecker";
 import { properLink } from "../../stuff/util";
 import type { FullPlugin } from "../../types";
 import PluginCard from "../PluginCard";
 import Search from "../Search";
+import InfoCard from "../InfoCard";
 
 export enum Sort {
 	DateNewest = "sheet.sort.date_newest",
 	DateOldest = "sheet.sort.date_oldest",
 	NameAZ = "sheet.sort.name_az",
 	NameZA = "sheet.sort.name_za",
+	WorkingFirst = "sheet.sort.working_first",
+	BrokenFirst = "sheet.sort.broken_first",
 }
 
 const AnimatedIconButton = Reanimated.default.createAnimatedComponent(IconButton);
@@ -45,31 +47,75 @@ export default () => {
 	const sortedData = React.useMemo(() => {
 		if (!parsed) return [];
 
-		if (search) {
-			return fuzzysort
-				.go(search, parsed, {
-					keys: [
-						"vendetta.original",
-						"name",
-						"description",
-						"authors.0.name",
-						"authors.1.name",
-						"authors.2.name", // THREE authors
-					],
-				})
-				.map(x => x.obj);
+		if (search.length > 0) {
+			const results = fuzzysort.go(search, parsed, {
+				keys: [
+					"name",
+					"description",
+					"authors.0",
+					"authors.1",
+					"authors.2",
+					"installUrl"
+				],
+			});
+			return results.map(x => x.obj);
 		}
 
-		let sorted = parsed.slice();
-		if ([Sort.NameAZ, Sort.NameZA].includes(sort)) {
-			sorted = sorted.sort((a, b) => a.name < b.name ? -1 : a.name > b.name ? 1 : 0);
-		}
-		if ([Sort.NameZA, Sort.DateNewest].includes(sort)) sorted.reverse();
+		const data = [...parsed];
 
-		return sorted;
-	}, [sort, parsed, search]);
+		const getStatusPriority = (status: FullPlugin["status"], sortBy: Sort): number => {
+			if (sortBy === Sort.WorkingFirst) {
+				if (status === "working" || status === "warning") return 0;
+				return 1;
+			}
+			if (sortBy === Sort.BrokenFirst) {
+				if (status === "broken") return 0;
+				return 1;
+			}
+			return 0;
+		};
+
+		switch (sort) {
+			case Sort.DateNewest:
+				data.reverse();
+				break;
+			case Sort.DateOldest:
+				break;
+			case Sort.NameAZ:
+				data.sort((a, b) => a.name.localeCompare(b.name));
+				break;
+			case Sort.NameZA:
+				data.sort((a, b) => b.name.localeCompare(a.name));
+				break;
+			case Sort.WorkingFirst:
+				data.sort((a, b) => {
+					const priorityA = getStatusPriority(a.status, Sort.WorkingFirst);
+					const priorityB = getStatusPriority(b.status, Sort.WorkingFirst);
+					if (priorityA !== priorityB) {
+						return priorityA - priorityB;
+					}
+					return a.name.localeCompare(b.name);
+				});
+				break;
+			case Sort.BrokenFirst:
+				data.sort((a, b) => {
+					const priorityA = getStatusPriority(a.status, Sort.BrokenFirst);
+					const priorityB = getStatusPriority(b.status, Sort.BrokenFirst);
+					if (priorityA !== priorityB) {
+						return priorityA - priorityB;
+					}
+					return a.name.localeCompare(b.name);
+				});
+				break;
+		}
+		return data;
+	}, [parsed, search, sort]);
 
 	React.useEffect(() => {
+		runPluginChecker().then(() => {
+			changes.current = getChanges();
+		});
+
 		// when user exits out of the page
 		return () => {
 			updateChanges();
@@ -78,40 +124,27 @@ export default () => {
 
 	React.useEffect(() => {
 		if (!parsed) {
-			safeFetch(`${constants.proxyUrl}plugins-full.json`, {
-				cache: "no-store",
-			})
-				.then(x =>
-					x
-						.json()
-						.then(x =>
-							// pluh 🗣
-							x.map((plug: any) => ({
-								...plug,
-								vendetta: {
-									...plug.vendetta,
-									original: properLink(
-										plug.vendetta.original,
-									),
-								},
-							}))
-						)
-						.then(x => {
-							run(x);
-							changes.current = getChanges();
-							setParsed(x);
-						})
-						.catch(() => {
-							showToast(
-								lang.format("toast.data.fail_parse", {}),
-								getAssetIDByName("CircleXIcon-primary"),
-							);
-						})
-				)
-				.catch(() => {
+			const url = "https://plugins-list.pages.dev/plugins-data.json";
+
+			safeFetch(url, { cache: "no-store" })
+				.then(x => x.json())
+				.then((rawData: any[]) => {
+					const adaptedData: FullPlugin[] = rawData.map((plug: any) => ({
+						name: plug.name,
+						description: plug.description,
+						authors: plug.authors,
+						status: plug.status,
+						sourceUrl: plug.sourceUrl,
+						installUrl: properLink(plug.installUrl),
+						warningMessage: plug.warningMessage,
+					}));
+					setParsed(adaptedData);
+				})
+				.catch((e) => {
+					console.error("[PluginBrowserPage] Fetch error:", e);
 					showToast(
 						lang.format("toast.data.fail_fetch", {}),
-						getAssetIDByName("CircleXIcon-primary"),
+						getAssetIDByName("CircleXIcon-primary")
 					);
 				});
 		}
@@ -146,11 +179,14 @@ export default () => {
 	return (
 		<FlashList
 			ListHeaderComponent={
-				<Search
-					onChangeText={setSearch}
-					filterSetSort={currentSetSort}
-					inputRef={inputRef}
-				/>
+				<>
+					<InfoCard />
+					<Search
+						onChangeText={setSearch}
+						filterSetSort={currentSetSort}
+						inputRef={inputRef}
+					/>
+				</>
 			}
 			ItemSeparatorComponent={() => <RN.View style={{ height: 8 }} />}
 			contentContainerStyle={{ paddingHorizontal: 10 }}
@@ -165,7 +201,7 @@ export default () => {
 					onRefresh={() => parsed !== null && setParsed(null)}
 				/>
 			}
-			onScroll={e => setScrolledPast(e.nativeEvent.contentOffset.y >= 45)}
+			onScroll={e => setScrolledPast(e.nativeEvent.contentOffset.y >= 195)}
 		/>
 	);
 };

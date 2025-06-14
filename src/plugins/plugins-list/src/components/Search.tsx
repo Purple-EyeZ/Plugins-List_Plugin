@@ -15,6 +15,8 @@ import SortDateNewestIcon from "../../assets/SortDateNewestIcon.png";
 import SortDateOldestIcon from "../../assets/SortDateOldestIcon.png";
 import SortNameAZIcon from "../../assets/SortNameAZIcon.png";
 import SortNameZAIcon from "../../assets/SortNameZAIcon.png";
+import SortWorkingIcon from "../../assets/SortWorkingIcon.png";
+import SortBrokenIcon from "../../assets/SortBrokenIcon.png";
 import { lang } from "..";
 import { Sort } from "./pages/PluginBrowserPage";
 
@@ -92,10 +94,12 @@ export default function Search({
 							variant: "default",
 							action: () => filterSetSort.current(value as Sort),
 							iconSource: {
-								"sheet.sort.date_newest": SortDateNewestIcon,
-								"sheet.sort.date_oldest": SortDateOldestIcon,
-								"sheet.sort.name_az": SortNameAZIcon,
-								"sheet.sort.name_za": SortNameZAIcon,
+								[Sort.DateNewest]: SortDateNewestIcon,
+								[Sort.DateOldest]: SortDateOldestIcon,
+								[Sort.NameAZ]: SortNameAZIcon,
+								[Sort.NameZA]: SortNameZAIcon,
+								[Sort.WorkingFirst]: SortWorkingIcon,
+								[Sort.BrokenFirst]: SortBrokenIcon,
 							}[value],
 						}))}
 					>
