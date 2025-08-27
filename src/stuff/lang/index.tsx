@@ -1,9 +1,7 @@
+import { getLocale } from "$/lib/intlProxy";
+import { fluxSubscribe } from "$/types";
 import { findByName } from "@vendetta/metro";
 import { ReactNative as RN } from "@vendetta/metro/common";
-
-import { fluxSubscribe } from "$/types";
-
-import { getLocale } from "$/lib/intlProxy";
 import type LangValues from "../../../lang/defs";
 import { useLangStore } from "./LangStore";
 
@@ -67,8 +65,7 @@ export class Lang<Plugin extends keyof LangValues> {
 
 	format<Key extends keyof LangValues[Plugin]["values"]>(
 		_key: Key,
-		input: Key extends keyof LangValues[Plugin]["fillers"]
-			? LangValues[Plugin]["fillers"][Key]
+		input: Key extends keyof LangValues[Plugin]["fillers"] ? LangValues[Plugin]["fillers"][Key]
 			: Record<string, never>,
 	): string {
 		const key = _key as string;

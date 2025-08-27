@@ -29,10 +29,12 @@ export namespace Readmes {
 	}
 
 	export interface Status {
-		status: "finished" | "unfinished" | "discontinued";
-		proxied?: boolean;
+		status: "finished" | "unfinished" | "broken" | "discontinued";
 		usable?: boolean;
-		discontinuedFor?: string;
+		reason?: {
+			cause: string;
+			reason: string;
+		};
 		external?: {
 			backend?: string;
 		};
@@ -43,8 +45,10 @@ export namespace Readmes {
 		name: string;
 		description: string;
 		status: Status["status"];
-		proxied: boolean;
-		discontinuedFor?: string;
+		reason?: {
+			cause: string;
+			reason: string;
+		};
 		badges: {
 			status: Badge;
 			links: Badge[];
@@ -75,6 +79,7 @@ export namespace Worker {
 	export interface PluginWorkerRequest {
 		name: string;
 		lang: string | null;
+		plugins: string[];
 		prcess?: string;
 	}
 }

@@ -1,15 +1,14 @@
+import { watch } from "chokidar";
+import Mime from "mime";
 import { createReadStream, existsSync } from "node:fs";
 import { readFile, stat } from "node:fs/promises";
 import http from "node:http";
 import * as os from "node:os";
 import { join } from "node:path";
-
-import { watch } from "chokidar";
-import Mime from "mime";
 import pc from "picocolors";
 import { WebSocketServer } from "ws";
-
 import { logDebug, logServer, logWss } from "../common/live/print.ts";
+import { readFileString } from "../fs.ts";
 
 const port = 8731;
 
@@ -85,7 +84,7 @@ server.on("request", async (req, res) => {
 					// 5XX
 					: pc.red(text),
 			)
-		}   ${pc.gray(req.headers["user-agent"] ?? "-")}`,
+		}   ${pc.gray(req.headers["user-agent"]?.toString() ?? "-")}`,
 	);
 });
 
@@ -98,11 +97,11 @@ let nextMessageTimeout: any = 0;
 
 const pluginHashes = new Map<string, string>();
 let chokidarReady = false;
-watch("dist/*/manifest.json", {
+watch("dist", {
 	ignoreInitial: false,
 })
 	.on("all", async (event, _path) => {
-		if (!["add", "change"].includes(event)) return;
+		if (!["add", "change"].includes(event) || !_path.endsWith("manifest.json")) return;
 		const path = _path.replace(/\\/g, "/");
 
 		const id = path.split("/")[1];
@@ -111,9 +110,9 @@ watch("dist/*/manifest.json", {
 		try {
 			pluginHashes.set(
 				id,
-				hash = JSON.parse(await readFile(path, "utf8")).hash,
+				hash = JSON.parse(await readFileString(path)).hash,
 			);
-		} catch (e) {
+		} catch (_e) {
 			return null;
 		}
 
@@ -134,9 +133,9 @@ watch("dist/*/manifest.json", {
 				);
 			}
 
-			wss.clients.forEach(ws =>
-				ws.send(JSON.stringify({ op: "update", updates: nextMessage }))
-			);
+			for (const ws of wss.clients) {
+				ws.send(JSON.stringify({ op: "update", updates: nextMessage }));
+			}
 			nextMessage = {};
 		}, 500);
 	})
@@ -176,13 +175,12 @@ wss.on("connection", ws => {
 
 server.listen(port, async () => {
 	const interfaces = Object.entries(os.networkInterfaces())
-		.map(([group, entries]) =>
+		.flatMap(([group, entries]) =>
 			entries!.map(entry => ({
 				...entry,
 				group,
 			}))
 		)
-		.flat()
 		.filter(int => int.family === "IPv4")
 		.sort((a, b) => a.group.localeCompare(b.group));
 	const longestInterface = Math.max(
