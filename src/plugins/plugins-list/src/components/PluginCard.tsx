@@ -1,5 +1,3 @@
-// Based on @Nexpid's Plugin Browser: https://github.com/nexpid/RevengePlugins/tree/main/src/plugins/plugin-browser
-
 import { clipboard, React, ReactNative as RN, url } from "@vendetta/metro/common";
 import { installPlugin, plugins, removePlugin } from "@vendetta/plugins";
 import { getAssetIDByName } from "@vendetta/ui/assets";

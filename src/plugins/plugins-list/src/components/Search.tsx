@@ -1,5 +1,3 @@
-// Based on @Nexpid's Plugin Browser: https://github.com/nexpid/RevengePlugins/tree/main/src/plugins/plugin-browser
-
 // https://raw.githubusercontent.com/pyoncord/Bunny/9809ef2cd4864d4f308c37016743f7d157e0ce3c/src/lib/ui/components/Search.tsx
 // this is a modified version with some plugin browser specific changes
 

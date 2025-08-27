@@ -1,5 +1,3 @@
-// Based on @Nexpid's Plugin Browser: https://github.com/nexpid/RevengePlugins/tree/main/src/plugins/plugin-browser
-
 import { safeFetch } from "@vendetta/utils";
 
 import { vstorage } from "..";

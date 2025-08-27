@@ -1,5 +1,3 @@
-// Based on @Nexpid's Plugin Browser: https://github.com/nexpid/RevengePlugins/tree/main/src/plugins/plugin-browser
-
 import { storage } from "@vendetta/plugin";
 
 import { Lang } from "$/lang";

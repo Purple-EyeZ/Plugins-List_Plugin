@@ -1,5 +1,3 @@
-// Based on @Nexpid's Plugin Browser: https://github.com/nexpid/RevengePlugins/tree/main/src/plugins/plugin-browser
-
 import { plugin } from "@vendetta";
 import { React } from "@vendetta/metro/common";
 

@@ -1,5 +1,3 @@
-// Based on @Nexpid's Plugin Browser: https://github.com/nexpid/RevengePlugins/tree/main/src/plugins/plugin-browser
-
 import type { FlashList as FlashListType } from "@shopify/flash-list";
 import { React, ReactNative as RN } from "@vendetta/metro/common";
 import { getAssetIDByName } from "@vendetta/ui/assets";

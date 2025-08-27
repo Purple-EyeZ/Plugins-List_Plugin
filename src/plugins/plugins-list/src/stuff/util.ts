@@ -1,5 +1,3 @@
-// Based on @Nexpid's Plugin Browser: https://github.com/nexpid/RevengePlugins/tree/main/src/plugins/plugin-browser
-
 import { fetchPlugin, startPlugin, stopPlugin } from "@vendetta/plugins";
 
 export function properLink(id: string): string {

@@ -1,5 +1,3 @@
-// Based on @Nexpid's Plugin Browser: https://github.com/nexpid/RevengePlugins/tree/main/src/plugins/plugin-browser
-
 // https://raw.githubusercontent.com/pyoncord/Bunny/dev/src/core/ui/settings/pages/Plugins/PluginCard.tsx
 // this is a modified version with some plugin browser specific changes
 
