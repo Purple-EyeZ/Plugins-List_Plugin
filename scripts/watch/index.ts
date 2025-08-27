@@ -72,8 +72,8 @@ await Promise.all(promises);
 
 // meow
 
-const srcPath = slashResolve("src") + "/";
-const langPath = slashResolve("lang") + "/";
+const srcPath = `${slashResolve("src")}/`;
+const langPath = `${slashResolve("lang")}/`;
 
 const shims = [
 	slashResolve("scripts/build/modules/workers/migration-shim.ts"),
@@ -136,9 +136,7 @@ const runFileChange = async (localPath: string) => {
 
 		try {
 			logBuild(
-				`Rebuilding ${
-					pc.bold(`${affected.length} plugin${affected.length !== 1 ? "s" : ""}`)
-				}`,
+				`Rebuilding ${pc.bold(`${affected.length} plugin${affected.length !== 1 ? "s" : ""}`)}`,
 			);
 
 			const plugins = (await listPlugins())
@@ -167,9 +165,9 @@ const runFileChange = async (localPath: string) => {
 					makeDocsIconsHook(),
 				]);
 
-				finishUp.forEach(({ prcess, worker }) =>
-					worker.postMessage({ finishUp: prcess })
-				);
+				for (const { prcess, worker } of finishUp) {
+					worker.postMessage({ finishUp: prcess });
+				}
 				finishUp.clear();
 
 				logBuild("Finished building");

@@ -1,5 +1,5 @@
 import { readdir } from "node:fs/promises";
-import { Worker } from "node:worker_threads";
+import type { Worker } from "node:worker_threads";
 
 import {
 	bench,
@@ -13,13 +13,16 @@ export async function listPlugins(noDev?: boolean) {
 	const plugins = await readdir("src/plugins");
 	const lang = await readdir("lang/values/base");
 
-	return plugins
-		.filter(x => (x.endsWith(".dev") ? isDev && !noDev : true))
+	const list = plugins
+		.filter(x => (x.endsWith(".dev") ? isDev && !noDev : true));
+
+	return list
 		.map(plugin => {
 			const langName = plugin.replaceAll("-", "_");
 			return {
 				name: plugin,
 				lang: lang.includes(`${langName}.json`) ? langName : null,
+				plugins: list,
 			};
 		});
 }
@@ -75,7 +78,10 @@ export function buildPlugin(
 						plugin.prcess
 						&& finishUp.add({ prcess: plugin.prcess, worker });
 				} else if (usedWorkers <= 0) {
-					workers.forEach(x => x.emit("finished")), workerResolves.res();
+					for (const worker of workers) {
+						worker.emit("finished");
+					}
+					workerResolves.res();
 				}
 			} else if (status.result === "nay") {
 				if (!silent) logScopeFailed(label);

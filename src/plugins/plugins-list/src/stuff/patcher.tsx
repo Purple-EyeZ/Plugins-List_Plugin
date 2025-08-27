@@ -12,7 +12,7 @@ import PluginsListIcon from "../../assets/PluginsListIcon2.png";
 export let pluginsEmitter: Emitter;
 
 export default (): () => void => {
-	const patches = new Array<any>();
+	const patches: (any)[] = [];
 	patches.push(
 		patchSettingsPin({
 			key: plugin.manifest.name,

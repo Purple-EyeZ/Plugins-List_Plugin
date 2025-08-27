@@ -1,80 +1,64 @@
 {
-	"$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
-	"vcs": { "enabled": false, "clientKind": "git", "useIgnoreFile": false },
+	"$schema": "https://biomejs.dev/schemas/2.1.2/schema.json",
 	"files": {
 		"ignoreUnknown": false,
-		"ignore": [
-			"declarations/*.d.ts",
-			"dist",
-			"node_modules",
-			"lang/values/*.json"
-		],
-		"include": ["src/**/*"]
+		"includes": [
+			"**",
+			"!**/declarations/**/*.d.ts",
+			"!**/dist",
+			"!**/node_modules",
+			"!**/lang/values/**/*.json"
+		]
 	},
 	"formatter": {
 		"enabled": false
 	},
-	"organizeImports": { "enabled": true },
+	"assist": {
+		"enabled": false
+	},
 	"json": {
 		"parser": {
 			"allowComments": true,
 			"allowTrailingCommas": false
-		},
-		"formatter": {
-			"indentWidth": 2
 		}
 	},
 	"linter": {
 		"enabled": true,
 		"rules": {
 			"recommended": true,
-			"complexity": {},
 			"correctness": {
-				"noConstAssign": "off",
 				"noGlobalObjectCalls": "off",
 				"noInvalidBuiltinInstantiation": "off",
 				"noInvalidConstructorSuper": "off",
-				"noNewSymbol": "off",
 				"noSetterReturn": "off",
 				"noUndeclaredVariables": "off",
 				"noUnreachable": "off",
 				"noUnreachableSuper": "off",
 				"noUnusedVariables": "warn",
-				"useArrayLiterals": "off",
-				"useJsxKeyInIterable": "off"
+				"noUnusedImports": {
+					"level": "info",
+					"fix": "safe",
+					"options": {}
+				},
+				"useJsxKeyInIterable": "warn"
 			},
 			"style": {
-				"noCommaOperator": "off",
-				"useSingleVarDeclarator": "off",
 				"noNonNullAssertion": "off",
-				"noParameterAssign": "off"
+				"noParameterAssign": "off",
+				"useArrayLiterals": "error",
+				"useSingleVarDeclarator": "off"
 			},
 			"suspicious": {
-				"noDuplicateClassMembers": "off",
-				"noDuplicateObjectKeys": "off",
-				"noDuplicateParameters": "off",
+				"noAssignInExpressions": "off",
+				"noExplicitAny": "off",
 				"noFunctionAssign": "off",
 				"noImportAssign": "off",
-				"noRedeclare": "off",
 				"noUnsafeNegation": "off",
-				"useGetterReturn": "off",
-				"noExplicitAny": "off",
-				"noAssignInExpressions": "off"
+				"useGetterReturn": "off"
+			},
+			"complexity": {
+				"noCommaOperator": "off"
 			}
 		}
-	},
-	"javascript": {
-		"formatter": {
-			"jsxQuoteStyle": "double",
-			"quoteProperties": "asNeeded",
-			"trailingCommas": "all",
-			"semicolons": "asNeeded",
-			"arrowParentheses": "asNeeded",
-			"bracketSameLine": false,
-			"quoteStyle": "single",
-			"attributePosition": "auto",
-			"bracketSpacing": true
-		},
-		"globals": []
 	}
 }

@@ -4,7 +4,10 @@ import { getAssetIDByName } from "@vendetta/ui/assets";
 import { showToast } from "@vendetta/ui/toasts";
 import type { StyleSheet } from "react-native";
 
+import { before } from "@vendetta/patcher";
 import type Modal from "./components/Modal";
+import { RNChatModule } from "./deps";
+import type { ChatRowTypeMessage } from "./typings";
 
 const ThemeStore = findByStoreName("ThemeStore");
 const { triggerHaptic } = findByProps("triggerHaptic");
@@ -34,14 +37,13 @@ export const getDiscordTheme = () => {
 	return theme;
 };
 
-export const resolveCustomSemantic = (dark: string, light: string) =>
+export const resolveCustomSemantic = (dark: any, light: any) =>
 	getDiscordTheme() === "light" ? light : dark;
 
 export const lerp = (og: string, target: string, perc: number) => {
 	const hex2rgb = (hex: string) =>
 		hex.match(/\w\w/g)?.map(x => Number.parseInt(x, 16)) ?? [0, 0, 0];
-	const rgb2hex = (rgb: number[]) =>
-		`#${rgb.map(x => x.toString(16).padStart(2, "0")).join("")}`;
+	const rgb2hex = (rgb: number[]) => `#${rgb.map(x => x.toString(16).padStart(2, "0")).join("")}`;
 
 	const ogR = hex2rgb(og);
 	const targetR = hex2rgb(target);
@@ -154,7 +156,7 @@ export function deepEquals(x: any, y: any) {
 		if (Object.keys(x).length !== Object.keys(y).length) return false;
 
 		for (const prop in x) {
-			if (Object.prototype.hasOwnProperty.call(y, prop)) {
+			if (Object.hasOwn(y, prop)) {
 				if (!deepEquals(x[prop], y[prop])) return false;
 			} else return false;
 		}
@@ -169,9 +171,7 @@ export function formatDuration(duration: number) {
 	const hours = Math.floor(duration / 3600);
 
 	if (hours > 0) {
-		return `${hours}:${String(minutes).padStart(2, "0")}:${
-			String(seconds).padStart(2, "0")
-		}`;
+		return `${hours}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
 	}
 	return `${minutes}:${String(seconds).padStart(2, "0")}`;
 }
@@ -194,6 +194,19 @@ export function createThemeContextStyleSheet<
 	}
 
 	return sheet;
+}
+
+export function patchRows(callback: (rows: ChatRowTypeMessage[]) => void) {
+	return before("updateRows", RNChatModule, (args) => {
+		const rows = JSON.parse(args[1]);
+		try {
+			callback(rows);
+		} catch (e) {
+			console.error("[nexpid.patchRows]", e);
+		}
+
+		args[1] = JSON.stringify(rows);
+	});
 }
 
 // ...

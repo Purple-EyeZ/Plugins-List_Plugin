@@ -4,15 +4,15 @@ import { vstorage } from "..";
 import type { FullPlugin } from "../types";
 import { properLink } from "./util";
 
-let lastPluginCache = new Array<string>();
+let lastPluginCache: string[] = [];
 
 export function getChanges(): string[] {
-    if (!lastPluginCache.length || !vstorage.pluginCache?.length) return [];
-    return lastPluginCache.filter(id => !vstorage.pluginCache.includes(id));
+    if (!lastPluginCache.length || !vstorage.state.pluginCache?.length) return [];
+    return lastPluginCache.filter(id => !vstorage.state.pluginCache.includes(id));
 }
 
 export function updateChanges() {
-    vstorage.pluginCache = [...lastPluginCache];
+    vstorage.state.pluginCache = [...lastPluginCache];
 }
 
 export async function run() {

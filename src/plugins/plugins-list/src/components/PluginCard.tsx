@@ -175,6 +175,7 @@ export default function PluginCard({
 			overflowTitle={item.name}
 			actions={[
 				{
+					label: statusState.hasPlugin ? "Uninstall" : "Install",
 					icon: statusState.hasPlugin ? "TrashIcon" : "DownloadIcon",
 					disabled: statusState.pending,
 					loading: statusState.pending,

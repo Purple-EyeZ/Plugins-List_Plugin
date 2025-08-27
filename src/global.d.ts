@@ -32,6 +32,7 @@ declare const IS_DEV: boolean;
 declare const PREVIEW_LANG: boolean;
 declare const DEFAULT_LANG: Record<string, string> | undefined;
 declare const DEV_LANG: Record<string, Record<string, string>> | undefined;
+declare const PLUGINS_LIST: string[];
 
 // simple Buffer type
 type Encoding = "base64" | "utf8" | "ascii";
@@ -44,7 +45,6 @@ declare const Buffer: {
 	};
 };
 
-// biome-ignore lint/correctness/noUnusedVariables: This is used
 interface Window {
 	nx?: {
 		readonly semantic: Record<
@@ -61,6 +61,11 @@ interface Window {
 				callback?: (args: any[], ret: any) => any,
 				oneTime?: boolean,
 			) => void;
+			shotgun: (
+				parent: any,
+				callback?: (args: any[], ret: any) => any,
+				oneTime?: boolean,
+			) => void;
 			props: {
 				collect: (
 					key: string,
@@ -71,5 +76,9 @@ interface Window {
 				redeem: (key: string, save?: boolean) => object | undefined;
 			};
 		};
+		q: {
+			toggleTheme: () => void;
+		};
 	};
+	nativeModuleProxy?: any;
 }
