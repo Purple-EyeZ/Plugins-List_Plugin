@@ -39,3 +39,4 @@ export async function refetchPlugin(plugin: any) {
 }
 
 export const emitterSymbol = Symbol.for("vendetta.storage.emitter");
+
