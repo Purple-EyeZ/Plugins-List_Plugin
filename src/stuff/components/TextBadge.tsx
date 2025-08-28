@@ -20,20 +20,20 @@ export default function TextBadge({
 	const variantColors = {
 		primary: {
 			background: semanticColors.REDESIGN_BUTTON_PRIMARY_BACKGROUND,
-			text: semanticColors.REDESIGN_BUTTON_PRIMARY_TEXT
+			text: semanticColors.REDESIGN_BUTTON_PRIMARY_TEXT,
 		},
 		danger: {
-			background: "#ed443e",
-			text: "#ffffff"
+			background: "#F44336",
+			text: "#ffffff",
 		},
 		success: {
-			background: "#43b581",
-			text: "#ffffff"
+			background: "#2DB132",
+			text: "#ffffff",
 		},
 		warning: {
-			background: "#faa61a",
-			text: "#ffffff"
-		}
+			background: "#FF9800",
+			text: "#ffffff",
+		},
 	};
 
 	const styles = stylesheet.createThemedStyleSheet({
