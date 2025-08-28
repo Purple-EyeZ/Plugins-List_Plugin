@@ -1,12 +1,12 @@
+import { findByProps } from "@vendetta/metro";
 import { clipboard, React, ReactNative as RN, url } from "@vendetta/metro/common";
 import { installPlugin, plugins, removePlugin } from "@vendetta/plugins";
+import { semanticColors } from "@vendetta/ui";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { showToast } from "@vendetta/ui/toasts";
-import { findByProps } from "@vendetta/metro";
-import { semanticColors } from "@vendetta/ui";
 
-import TextBadge from "$/components/TextBadge";
 import Text from "$/components/Text";
+import TextBadge from "$/components/TextBadge";
 import { resolveSemanticColor } from "$/types";
 
 import { lang } from "..";
@@ -14,9 +14,15 @@ import type { FullPlugin } from "../types";
 import Card from "./Card";
 
 const { openAlert } = findByProps("openAlert", "dismissAlert");
-const { AlertModal, AlertActions, AlertActionButton } = findByProps("AlertModal", "AlertActions", "AlertActionButton");
+const { AlertModal, AlertActions, AlertActionButton } = findByProps(
+	"AlertModal",
+	"AlertActions",
+	"AlertActionButton",
+);
 
-const getStatusVariant = (status: FullPlugin["status"]): "success" | "danger" | "warning" | "primary" => {
+const getStatusVariant = (
+	status: FullPlugin["status"],
+): "success" | "danger" | "warning" | "primary" => {
 	switch (status) {
 		case "working":
 			return "success";
@@ -106,38 +112,43 @@ export default function PluginCard({
 				? "Installing broken plugins may crash your client or cause unexpected behavior."
 				: "This plugin may not work as expected.";
 
-			openAlert("plugin-install-warning", (
-				<AlertModal
-					title="Warning!"
-					content={<Text variant="text-md/semibold" color="TEXT_NORMAL">{defaultMessage}</Text>}
-					extraContent={item.warningMessage && (
-						<RN.View style={{
-							backgroundColor: resolveSemanticColor(semanticColors.BACKGROUND_SECONDARY),
-							borderRadius: 8,
-							padding: 12,
-						}}>
-							<Text variant="text-md/normal" color="TEXT_MUTED">
-								{item.warningMessage}
-							</Text>
-						</RN.View>
-					)}
-					actions={
-						<AlertActions>
-							<AlertActionButton
-								text="Install Anyway"
-								variant="primary"
-								onPress={async () => {
-									await performInstall();
+			openAlert(
+				"plugin-install-warning",
+				(
+					<AlertModal
+						title="Warning!"
+						content={<Text variant="text-md/semibold" color="TEXT_NORMAL">{defaultMessage}</Text>}
+						extraContent={item.warningMessage && (
+							<RN.View
+								style={{
+									backgroundColor: resolveSemanticColor(semanticColors.BACKGROUND_SECONDARY),
+									borderRadius: 8,
+									padding: 12,
 								}}
-							/>
-							<AlertActionButton
-								text="Cancel"
-								variant="secondary"
-							/>
-						</AlertActions>
-					}
-				/>
-			));
+							>
+								<Text variant="text-md/normal" color="TEXT_MUTED">
+									{item.warningMessage}
+								</Text>
+							</RN.View>
+						)}
+						actions={
+							<AlertActions>
+								<AlertActionButton
+									text="Install Anyway"
+									variant="primary"
+									onPress={async () => {
+										await performInstall();
+									}}
+								/>
+								<AlertActionButton
+									text="Cancel"
+									variant="secondary"
+								/>
+							</AlertActions>
+						}
+					/>
+				),
+			);
 			return;
 		}
 		await performInstall();

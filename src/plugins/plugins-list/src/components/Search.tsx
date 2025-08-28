@@ -11,12 +11,12 @@ import intlProxy from "$/lib/intlProxy";
 import { ContextMenu, IconButton, TextInput } from "$/lib/redesign";
 import { resolveSemanticColor } from "$/types";
 
+import SortBrokenIcon from "../../assets/SortBrokenIcon.png";
 import SortDateNewestIcon from "../../assets/SortDateNewestIcon.png";
 import SortDateOldestIcon from "../../assets/SortDateOldestIcon.png";
 import SortNameAZIcon from "../../assets/SortNameAZIcon.png";
 import SortNameZAIcon from "../../assets/SortNameZAIcon.png";
 import SortWorkingIcon from "../../assets/SortWorkingIcon.png";
-import SortBrokenIcon from "../../assets/SortBrokenIcon.png";
 import { lang } from "..";
 import { Sort } from "./pages/PluginBrowserPage";
 

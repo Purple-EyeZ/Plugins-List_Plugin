@@ -11,12 +11,12 @@ import { IconButton } from "$/lib/redesign";
 import { managePage } from "$/lib/ui";
 
 import { lang } from "../..";
-import { getChanges, updateChanges, run as runPluginChecker } from "../../stuff/pluginChecker";
+import { getChanges, run as runPluginChecker, updateChanges } from "../../stuff/pluginChecker";
 import { properLink } from "../../stuff/util";
 import type { FullPlugin } from "../../types";
+import InfoCard from "../InfoCard";
 import PluginCard from "../PluginCard";
 import Search from "../Search";
-import InfoCard from "../InfoCard";
 
 export enum Sort {
 	DateNewest = "sheet.sort.date_newest",
@@ -55,10 +55,29 @@ export default () => {
 					"authors.0",
 					"authors.1",
 					"authors.2",
-					"installUrl"
+					"installUrl",
 				],
+				// From 0 to 1, 1 being a perfect match
+				threshold: 0.3,
 			});
-			return results.map(x => x.obj);
+
+			const boostedResults = results.map(result => {
+				let boostedScore = result.score;
+				const nameScore = result[0]?.score ?? 0;
+
+				if (nameScore > 0.2) {
+					boostedScore += 10;
+				}
+
+				return {
+					...result,
+					boostedScore,
+				};
+			});
+
+			boostedResults.sort((a, b) => b.boostedScore - a.boostedScore);
+
+			return boostedResults.map(x => x.obj);
 		}
 
 		const data = [...parsed];
@@ -144,7 +163,7 @@ export default () => {
 					console.error("[PluginBrowserPage] Fetch error:", e);
 					showToast(
 						lang.format("toast.data.fail_fetch", {}),
-						getAssetIDByName("CircleXIcon-primary")
+						getAssetIDByName("CircleXIcon-primary"),
 					);
 				});
 		}

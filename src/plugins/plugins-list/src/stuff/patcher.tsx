@@ -4,10 +4,10 @@ import { React } from "@vendetta/metro/common";
 import TextBadge from "$/components/TextBadge";
 import { patchSettingsPin } from "$/lib/pinToSettings";
 
+import PluginsListIcon from "../../assets/PluginsListIcon2.png";
 import { lang } from "..";
 import PluginBrowserPage from "../components/pages/PluginBrowserPage";
 import { getChanges, initThing } from "./pluginChecker";
-import PluginsListIcon from "../../assets/PluginsListIcon2.png";
 
 export let pluginsEmitter: Emitter;
 
