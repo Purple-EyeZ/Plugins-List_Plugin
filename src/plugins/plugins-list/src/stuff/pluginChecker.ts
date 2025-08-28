@@ -7,29 +7,29 @@ import { properLink } from "./util";
 let lastPluginCache: string[] = [];
 
 export function getChanges(): string[] {
-    if (!lastPluginCache.length || !vstorage.state.pluginCache?.length) return [];
-    return lastPluginCache.filter(id => !vstorage.state.pluginCache.includes(id));
+	if (!lastPluginCache.length || !vstorage.state.pluginCache?.length) return [];
+	return lastPluginCache.filter(id => !vstorage.state.pluginCache.includes(id));
 }
 
 export function updateChanges() {
-    vstorage.state.pluginCache = [...lastPluginCache];
+	vstorage.state.pluginCache = [...lastPluginCache];
 }
 
 export async function run() {
-    try {
-        const response = await safeFetch("https://plugins-list.pages.dev/plugins-data.json", {
-            cache: "no-store",
-        });
-        if (!response.ok) {
-            console.error("[PluginChecker] Failed to fetch plugin list, status:", response.status);
-            return;
-        }
-        const pluginData = await response.json() as FullPlugin[];
+	try {
+		const response = await safeFetch("https://plugins-list.pages.dev/plugins-data.json", {
+			cache: "no-store",
+		});
+		if (!response.ok) {
+			console.error("[PluginChecker] Failed to fetch plugin list, status:", response.status);
+			return;
+		}
+		const pluginData = await response.json() as FullPlugin[];
 
-        lastPluginCache = pluginData.map(plugin => properLink(plugin.installUrl));
-    } catch (error) {
-        console.error("[PluginChecker] Error fetching or processing plugin list:", error);
-    }
+		lastPluginCache = pluginData.map(plugin => properLink(plugin.installUrl));
+	} catch (error) {
+		console.error("[PluginChecker] Error fetching or processing plugin list:", error);
+	}
 }
 
 export function initThing(): () => void {

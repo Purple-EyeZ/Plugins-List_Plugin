@@ -36,6 +36,7 @@
 		"@types/tar-fs": "^2.0.4",
 		"chokidar": "^4.0.3",
 		"detect-libc": "^2.0.4",
+		"dprint": "^0.50.1",
 		"picocolors": "^1.1.1",
 		"tar-fs": "3.0.8",
 		"typescript": "^5.8.3",

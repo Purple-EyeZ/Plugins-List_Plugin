@@ -168,10 +168,10 @@ export default function Card(props: CardProps) {
 												title: props.overflowTitle,
 												icon: props.headerIcon
 													&& props.headerIcon && (
-														<FormRow.Icon
-															source={props.headerIcon}
-														/>
-													),
+													<FormRow.Icon
+														source={props.headerIcon}
+													/>
+												),
 												onClose: hideActionSheet,
 											},
 											options: props.overflowActions?.map(
