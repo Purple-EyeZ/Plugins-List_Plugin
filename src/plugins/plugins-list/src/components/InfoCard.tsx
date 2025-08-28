@@ -1,8 +1,8 @@
-// Based on @Nexpid's Plugin Browser: https://github.com/nexpid/RevengePlugins/tree/main/src/plugins/plugin-browser
+// Based on: https://github.com/revenge-mod/revenge-bundle/blob/main/src/core/ui/settings/pages/Plugins/index.tsx
 
 import Text from "$/components/Text";
 import { IconButton } from "$/lib/redesign";
-import { React, ReactNative as RN, stylesheet, url } from "@vendetta/metro/common";
+import { ReactNative as RN, stylesheet } from "@vendetta/metro/common";
 import { semanticColors } from "@vendetta/ui";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 
@@ -51,7 +51,7 @@ export default function InfoCard() {
 						variant="secondary"
 						icon={getAssetIDByName("CircleInformationIcon-primary")}
 						style={{ marginLeft: 8 }}
-						onPress={() => url.openURL("https://plugins-list.pages.dev/About/")}
+						onPress={() => RN.Linking.openURL("https://plugins-list.pages.dev/About/")}
 					/>
 				</RN.View>
 			</RN.View>

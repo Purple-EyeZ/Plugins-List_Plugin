@@ -1,5 +1,5 @@
 import { findByProps } from "@vendetta/metro";
-import { clipboard, React, ReactNative as RN, url } from "@vendetta/metro/common";
+import { clipboard, React, ReactNative as RN } from "@vendetta/metro/common";
 import { installPlugin, plugins, removePlugin } from "@vendetta/plugins";
 import { semanticColors } from "@vendetta/ui";
 import { getAssetIDByName } from "@vendetta/ui/assets";
@@ -227,8 +227,6 @@ export default function PluginCard({
 								);
 								if (await RN.Linking.canOpenURL(githubLink)) {
 									RN.Linking.openURL(githubLink);
-								} else {
-									url.openURL(githubLink);
 								}
 							},
 						},
