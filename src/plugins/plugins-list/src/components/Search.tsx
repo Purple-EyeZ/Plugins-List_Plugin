@@ -30,7 +30,7 @@ function SearchIcon() {
 					semanticColors.INTERACTIVE_NORMAL,
 				),
 			}}
-			source={getAssetIDByName("search")}
+			source={getAssetIDByName("icon-search")}
 		/>
 	);
 }
