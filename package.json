@@ -20,29 +20,29 @@
 	},
 	"dependencies": {
 		"@nexpid/vdp-shared": "^1.0.2",
-		"@swc/core": "^1.10.7",
+		"@swc/core": "^1.15.3",
 		"dts-bundle": "^0.7.3",
-		"emoji-regex": "^10.4.0",
-		"esbuild": "^0.20.1",
+		"emoji-regex": "^10.6.0",
+		"esbuild": "^0.20.2",
 		"fuzzysort": "^3.1.0",
 		"image-size": "2.0.2",
-		"mime": "^4.0.7",
+		"mime": "^4.1.0",
 		"tsx": "4.19.4"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "^2.1.2",
-		"@eslint/js": "^9.26.0",
+		"@biomejs/biome": "^2.3.7",
+		"@eslint/js": "^9.39.1",
 		"@types/dts-bundle": "^0.0.35",
 		"@types/tar-fs": "^2.0.4",
 		"chokidar": "^4.0.3",
-		"detect-libc": "^2.0.4",
-		"dprint": "^0.50.1",
+		"detect-libc": "^2.1.2",
+		"dprint": "^0.50.2",
 		"picocolors": "^1.1.1",
 		"tar-fs": "3.0.8",
-		"typescript": "^5.8.3",
+		"typescript": "^5.9.3",
 		"vendetta-types": "^2.4.21",
-		"ws": "^8.18.2",
-		"zustand": "^5.0.6"
+		"ws": "^8.18.3",
+		"zustand": "^5.0.8"
 	},
 	"pnpm": {
 		"patchedDependencies": {
