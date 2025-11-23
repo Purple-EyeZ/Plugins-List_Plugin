@@ -12,10 +12,25 @@ const { TableRowIcon } = findByProps("TableRowIcon");
 
 const tabsNavigationRef = bunny.metro.findByPropsLazy("getRootNavigationRef");
 const settingConstants = bunny.metro.findByPropsLazy("SETTING_RENDERER_CONFIG");
+const createListModule = bunny.metro.findByPropsLazy("createList");
 const SettingsOverviewScreen = bunny.metro.findByNameLazy(
 	"SettingsOverviewScreen",
 	false,
 );
+
+function addTabToSection(sections: any[], tabKey: string) {
+	if (!sections) return;
+
+	const section = sections.find((x: any) =>
+		["Bunny", "Revenge"].some(
+			(mod) => x.label === mod && x.title === mod,
+		)
+	);
+
+	if (section?.settings) {
+		section.settings = [...section.settings, tabKey];
+	}
+}
 
 export function patchTabsUI(tabs: PinToSettingsTabs, patches: (() => void)[]) {
 	const row = {
@@ -24,7 +39,7 @@ export function patchTabsUI(tabs: PinToSettingsTabs, patches: (() => void)[]) {
 			title: tabs.title,
 			icon: tabs.icon,
 			IconComponent: tabs.icon && (() => {
-				const actualIconSource = (typeof tabs.icon === 'object' && tabs.icon.uri !== undefined)
+				const actualIconSource = (typeof tabs.icon === "object" && tabs.icon.uri !== undefined)
 					? tabs.icon.uri
 					: tabs.icon;
 				return <TableRowIcon source={actualIconSource} />;
@@ -58,26 +73,29 @@ export function patchTabsUI(tabs: PinToSettingsTabs, patches: (() => void)[]) {
 
 	const firstRender = Symbol("pinToSettings meow meow");
 
-	patches.push(
-		after("default", SettingsOverviewScreen, (args, ret) => {
-			// shrug??
-			if (!args[0][firstRender]) {
+	try {
+		if (!createListModule) throw "no createList";
+		patches.push(
+			after("createList", createListModule, (args, _) => {
+				if (args[0][firstRender]) return;
 				args[0][firstRender] = true;
 
-				const { sections } = findInReactTree(
-					ret,
-					i => i.props?.sections,
-				).props;
-				const section = sections?.find((x: any) =>
-					["Bunny", "Revenge"].some(
-						mod => x.label === mod && x.title === mod,
-					)
-				);
+				addTabToSection(args[0]?.sections, tabs.key);
+			}),
+		);
+	} catch {
+		patches.push(
+			after("default", SettingsOverviewScreen, (args, ret) => {
+				if (args[0][firstRender]) return;
+				args[0][firstRender] = true;
 
-				if (section?.settings) {
-					section.settings = [...section.settings, tabs.key];
-				}
-			}
-		}),
-	);
+				const sections = findInReactTree(
+					ret,
+					(i) => i.props?.sections,
+				)?.props?.sections;
+
+				addTabToSection(sections, tabs.key);
+			}),
+		);
+	}
 }
