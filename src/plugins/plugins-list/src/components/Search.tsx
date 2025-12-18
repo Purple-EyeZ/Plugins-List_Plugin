@@ -7,6 +7,7 @@ import { getAssetIDByName } from "@vendetta/ui/assets";
 import { ErrorBoundary } from "@vendetta/ui/components";
 import type { TextInput as TextInputType } from "react-native";
 
+import { compatColors } from "$/compat";
 import intlProxy from "$/lib/intlProxy";
 import { ContextMenu, IconButton, TextInput } from "$/lib/redesign";
 import { resolveSemanticColor } from "$/types";
@@ -27,7 +28,7 @@ function SearchIcon() {
 				width: 16,
 				height: 16,
 				tintColor: resolveSemanticColor(
-					semanticColors.INTERACTIVE_NORMAL,
+					semanticColors[compatColors.INTERACTIVE_ICON_DEFAULT],
 				),
 			}}
 			source={getAssetIDByName("MagnifyingGlassIcon")}

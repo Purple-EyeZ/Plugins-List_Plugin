@@ -6,6 +6,7 @@ import { rawColors, semanticColors } from "@vendetta/ui";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { Forms } from "@vendetta/ui/components";
 
+import { compatColors } from "$/compat";
 import { hideActionSheet, showSimpleActionSheet } from "$/components/ActionSheet";
 import Text from "$/components/Text";
 import { Reanimated } from "$/deps";
@@ -20,9 +21,9 @@ const styles = stylesheet.createThemedStyleSheet({
 	card: {
 		padding: 16,
 		borderRadius: 16,
-		borderColor: semanticColors.BORDER_FAINT,
+		borderColor: semanticColors[compatColors.BORDER_MUTED],
 		borderWidth: 1,
-		backgroundColor: semanticColors.CARD_PRIMARY_BG,
+		backgroundColor: semanticColors[compatColors.CARD_BACKGROUND_DEFAULT],
 	},
 	content: {
 		flexDirection: "row",
@@ -120,7 +121,7 @@ export default function Card(props: CardProps) {
 							)}
 							<Text
 								variant="heading-lg/semibold"
-								color="TEXT_STRONG"
+								color={compatColors.TEXT_STRONG}
 								lineClamp={1}
 								ellipsis="tail"
 								style={{ flexShrink: 1 }}
@@ -195,7 +196,7 @@ export default function Card(props: CardProps) {
 					</RN.View>
 				</RN.View>
 				{props.descriptionLabel && (
-					<Text variant="text-md/medium" color="TEXT_DEFAULT">
+					<Text variant="text-md/medium" color={compatColors.TEXT_DEFAULT}>
 						{props.descriptionLabel}
 					</Text>
 				)}

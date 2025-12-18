@@ -1,5 +1,6 @@
 // Based on: https://github.com/revenge-mod/revenge-bundle/blob/main/src/core/ui/settings/pages/Plugins/index.tsx
 
+import { compatColors } from "$/compat";
 import Text from "$/components/Text";
 import { IconButton } from "$/lib/redesign";
 import { ReactNative as RN, stylesheet } from "@vendetta/metro/common";
@@ -11,9 +12,9 @@ export default function InfoCard() {
 		card: {
 			padding: 16,
 			borderRadius: 16,
-			borderColor: semanticColors.BORDER_FAINT,
+			borderColor: semanticColors[compatColors.BORDER_MUTED],
 			borderWidth: 1,
-			backgroundColor: semanticColors.CARD_PRIMARY_BG,
+			backgroundColor: semanticColors[compatColors.CARD_BACKGROUND_DEFAULT],
 			marginTop: 8,
 			marginBottom: 8,
 			marginHorizontal: 10,
@@ -37,7 +38,7 @@ export default function InfoCard() {
 		<RN.View style={styles.card}>
 			<RN.View style={styles.container}>
 				<RN.View style={styles.textContainer}>
-					<Text variant="heading-md/bold" color="TEXT_STRONG">
+					<Text variant="heading-md/bold" color={compatColors.TEXT_STRONG}>
 						Unproxied Plugins List
 					</Text>
 					<Text variant="text-sm/medium" color="TEXT_MUTED">

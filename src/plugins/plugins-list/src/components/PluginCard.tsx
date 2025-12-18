@@ -5,6 +5,7 @@ import { semanticColors } from "@vendetta/ui";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { showToast } from "@vendetta/ui/toasts";
 
+import { compatColors } from "$/compat";
 import Text from "$/components/Text";
 import TextBadge from "$/components/TextBadge";
 import { resolveSemanticColor } from "$/types";
@@ -117,7 +118,11 @@ export default function PluginCard({
 				(
 					<AlertModal
 						title="Warning!"
-						content={<Text variant="text-md/semibold" color="TEXT_DEFAULT">{defaultMessage}</Text>}
+						content={
+							<Text variant="text-md/semibold" color={compatColors.TEXT_DEFAULT}>
+								{defaultMessage}
+							</Text>
+						}
 						extraContent={item.warningMessage && (
 							<RN.View
 								style={{
