@@ -30,7 +30,7 @@ function SearchIcon() {
 					semanticColors.INTERACTIVE_NORMAL,
 				),
 			}}
-			source={getAssetIDByName("icon-search")}
+			source={getAssetIDByName("MagnifyingGlassIcon")}
 		/>
 	);
 }
