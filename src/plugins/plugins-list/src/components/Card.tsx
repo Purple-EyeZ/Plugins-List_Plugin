@@ -120,7 +120,7 @@ export default function Card(props: CardProps) {
 							)}
 							<Text
 								variant="heading-lg/semibold"
-								color="HEADER_PRIMARY"
+								color="TEXT_STRONG"
 								lineClamp={1}
 								ellipsis="tail"
 								style={{ flexShrink: 1 }}
@@ -195,7 +195,7 @@ export default function Card(props: CardProps) {
 					</RN.View>
 				</RN.View>
 				{props.descriptionLabel && (
-					<Text variant="text-md/medium" color="TEXT_NORMAL">
+					<Text variant="text-md/medium" color="TEXT_DEFAULT">
 						{props.descriptionLabel}
 					</Text>
 				)}

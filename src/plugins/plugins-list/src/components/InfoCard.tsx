@@ -37,7 +37,7 @@ export default function InfoCard() {
 		<RN.View style={styles.card}>
 			<RN.View style={styles.container}>
 				<RN.View style={styles.textContainer}>
-					<Text variant="heading-md/bold" color="TEXT_PRIMARY">
+					<Text variant="heading-md/bold" color="TEXT_STRONG">
 						Unproxied Plugins List
 					</Text>
 					<Text variant="text-sm/medium" color="TEXT_MUTED">

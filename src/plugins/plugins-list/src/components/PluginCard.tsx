@@ -117,7 +117,7 @@ export default function PluginCard({
 				(
 					<AlertModal
 						title="Warning!"
-						content={<Text variant="text-md/semibold" color="TEXT_NORMAL">{defaultMessage}</Text>}
+						content={<Text variant="text-md/semibold" color="TEXT_DEFAULT">{defaultMessage}</Text>}
 						extraContent={item.warningMessage && (
 							<RN.View
 								style={{
