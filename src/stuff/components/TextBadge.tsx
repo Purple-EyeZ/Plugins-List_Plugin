@@ -106,7 +106,7 @@ export default function TextBadge({
 			)}
 			<Text
 				variant="text-xxs/bold"
-				color="STATUS_DANGER_TEXT"
+				color="REDESIGN_BUTTON_DESTRUCTIVE_TEXT"
 				align="center"
 				style={{
 					textTransform: "uppercase",
