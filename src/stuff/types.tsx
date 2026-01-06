@@ -2,7 +2,9 @@ import { findByProps, findByStoreName } from "@vendetta/metro";
 import { FluxDispatcher, ReactNative as RN } from "@vendetta/metro/common";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { showToast } from "@vendetta/ui/toasts";
+import type { MutableRefObject, RefObject } from "react";
 import type { StyleSheet } from "react-native";
+import type { SharedValue } from "react-native-reanimated";
 
 import { before } from "@vendetta/patcher";
 import type Modal from "./components/Modal";
@@ -258,4 +260,32 @@ export interface SearchContext {
 
 export function isObject(x: Record<any, any>) {
 	return typeof x === "object" && !Array.isArray(x);
+}
+
+export interface SegmentedControlItem {
+	id: string;
+	label: string;
+	page?: JSX.Element | null;
+}
+
+export interface SegmentedControlStateArgs {
+	items: SegmentedControlItem[];
+	pageWidth: number;
+	defaultIndex?: number;
+}
+
+export interface SegmentedControlState {
+	activeIndex: SharedValue<number>;
+	pagerRef: RefObject<unknown>;
+	scrollTarget: SharedValue<number>;
+	scrollOverflow: SharedValue<number>;
+	scrollOffset: SharedValue<number>;
+	items: SegmentedControlItem[];
+	itemDimensions: SharedValue<unknown[]>;
+	pageWidth: number;
+	pressedIndex: SharedValue<number>;
+	onPageChangeRef: MutableRefObject<unknown>;
+	setActiveIndex: (index: number) => void;
+	setItemDimensions: (index: number, dimensions: unknown[]) => void;
+	useReducedMotion: boolean;
 }

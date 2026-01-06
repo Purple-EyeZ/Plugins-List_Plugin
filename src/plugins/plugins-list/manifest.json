@@ -1,6 +1,6 @@
 {
 	"name": "Plugins List",
-	"description": "A modified version of Nexpid's plugin browser that uses https://plugins-list.pages.dev as source.",
+	"description": "Browse plugins & themes from https://plugins-list.pages.dev/ - Fork of Nexpid's Plugin Browser",
 	"authors": [
 		{
 			"name": "nexpid",

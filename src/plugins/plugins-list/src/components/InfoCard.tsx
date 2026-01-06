@@ -15,7 +15,7 @@ export default function InfoCard() {
 			borderColor: semanticColors[compatColors.BORDER_MUTED],
 			borderWidth: 1,
 			backgroundColor: semanticColors[compatColors.CARD_BACKGROUND_DEFAULT],
-			marginTop: 8,
+			marginTop: 5,
 			marginBottom: 8,
 			marginHorizontal: 10,
 		},

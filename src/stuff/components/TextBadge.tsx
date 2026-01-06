@@ -10,13 +10,53 @@ export default function TextBadge({
 	variant,
 	children,
 	shiny,
+	isTag,
+	tagColor,
 }: React.PropsWithChildren<{
 	style?: ViewStyle;
-	variant: "primary" | "danger" | "success" | "warning";
+	variant?: "primary" | "danger" | "success" | "warning";
 	shiny?: boolean;
+	isTag?: boolean;
+	tagColor?: string;
 }>) {
 	const [width, setWidth] = React.useState(0);
 
+	if (isTag) {
+		const tagStyles = stylesheet.createThemedStyleSheet({
+			main: {
+				flexDirection: "row",
+				alignItems: "center",
+				borderRadius: 999,
+				paddingHorizontal: 8,
+				paddingVertical: 4,
+				backgroundColor: semanticColors.INPUT_BACKGROUND_DEFAULT,
+				marginTop: 3,
+			},
+			circle: {
+				width: 8,
+				height: 8,
+				borderRadius: 9,
+				marginRight: 4,
+			},
+		});
+
+		return (
+			<RN.View style={[tagStyles.main, style]}>
+				{tagColor && <RN.View style={[tagStyles.circle, { backgroundColor: tagColor }]} />}
+				<Text
+					variant="text-xxs/bold"
+					color="TEXT_DEFAULT"
+					style={{
+						textTransform: "uppercase",
+					}}
+				>
+					{children}
+				</Text>
+			</RN.View>
+		);
+	}
+
+	const finalVariant = variant ?? "primary";
 	const variantColors = {
 		primary: {
 			background: semanticColors.REDESIGN_BUTTON_PRIMARY_BACKGROUND,
@@ -44,8 +84,8 @@ export default function TextBadge({
 			borderRadius: 2147483647,
 			paddingHorizontal: 6,
 			paddingVertical: 3,
-			backgroundColor: variantColors[variant].background,
-			color: variantColors[variant].text,
+			backgroundColor: variantColors[finalVariant].background,
+			color: variantColors[finalVariant].text,
 			marginTop: 3,
 			overflow: "hidden",
 		},
@@ -71,9 +111,7 @@ export default function TextBadge({
 						randomness,
 						Reanimated.withTiming(width, {
 							duration: 800,
-							easing: Reanimated.Easing.inOut(
-								Reanimated.Easing.cubic,
-							),
+							easing: Reanimated.Easing.inOut(Reanimated.Easing.cubic),
 						}),
 					),
 				),

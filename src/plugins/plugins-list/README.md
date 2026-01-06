@@ -15,4 +15,4 @@
 Plugins List
 </h1>
 
-A modified version of Nexpid's plugin browser that uses https://plugins-list.pages.dev as source.
+Browse plugins & themes from https://plugins-list.pages.dev/ - Fork of Nexpid's Plugin Browser

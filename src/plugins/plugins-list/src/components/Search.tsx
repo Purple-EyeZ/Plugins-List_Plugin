@@ -19,7 +19,7 @@ import SortNameAZIcon from "../../assets/SortNameAZIcon.png";
 import SortNameZAIcon from "../../assets/SortNameZAIcon.png";
 import SortWorkingIcon from "../../assets/SortWorkingIcon.png";
 import { lang } from "..";
-import { Sort } from "./pages/PluginBrowserPage";
+import { Sort } from "../types";
 
 function SearchIcon() {
 	return (
@@ -40,15 +40,19 @@ export default function Search({
 	onChangeText,
 	filterSetSort,
 	inputRef,
+	sortOptions,
 }: {
 	onChangeText: (v: string) => void;
 	filterSetSort: React.MutableRefObject<
 		React.Dispatch<React.SetStateAction<Sort>>
 	>;
 	inputRef: React.MutableRefObject<TextInputType | undefined>;
+	sortOptions?: Sort[];
 }) {
 	const [query, setQuery] = React.useState("");
 	const [focused, setFocused] = React.useState(false);
+
+	const availableOptions = sortOptions ?? Object.values(Sort);
 
 	const onChange = (value: string) => {
 		setQuery(value);
@@ -62,7 +66,7 @@ export default function Search({
 					flexDirection: "row",
 					justifyContent: "center",
 					gap: 8,
-					marginBottom: 5,
+					marginBottom: 8,
 				}}
 			>
 				<RN.View
@@ -90,7 +94,7 @@ export default function Search({
 				{!focused && !query && (
 					<ContextMenu
 						title={lang.format("sheet.sort.title", {})}
-						items={Object.values(Sort).map(value => ({
+						items={availableOptions.map(value => ({
 							label: lang.format(value, {}),
 							variant: "default",
 							action: () => filterSetSort.current(value as Sort),

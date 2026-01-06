@@ -63,6 +63,7 @@ interface CardProps {
 	headerLabel: React.ReactNode;
 	headerSuffix?: React.ReactNode;
 	headerSublabel?: React.ReactNode;
+	contentAfterSublabel?: React.ReactNode;
 	headerIcon?: number;
 	descriptionLabel?: string;
 	actions: Action[];
@@ -70,9 +71,25 @@ interface CardProps {
 	overflowActions: OverflowAction[];
 	highlight?: boolean;
 	disabled?: boolean;
+	children?: React.ReactNode;
+	mainStackSpacing?: number;
 }
 
-export default function Card(props: CardProps) {
+export default function Card({
+	headerLabel,
+	headerSuffix,
+	headerSublabel,
+	contentAfterSublabel,
+	headerIcon,
+	descriptionLabel,
+	actions,
+	overflowTitle,
+	overflowActions,
+	highlight,
+	disabled,
+	children,
+	mainStackSpacing,
+}: CardProps) {
 	const baseColor = styles.card.backgroundColor as string;
 	const highlightColor = lerp(
 		baseColor,
@@ -84,7 +101,7 @@ export default function Card(props: CardProps) {
 
 	React.useEffect(() => {
 		color.value = baseColor;
-		if (props.highlight) {
+		if (highlight) {
 			color.value = Reanimated.withSequence(
 				Reanimated.withTiming(highlightColor, {
 					duration: 500,
@@ -96,7 +113,7 @@ export default function Card(props: CardProps) {
 				}),
 			);
 		}
-	}, [props.highlight]);
+	}, [highlight]);
 
 	return (
 		<Reanimated.default.View
@@ -105,18 +122,19 @@ export default function Card(props: CardProps) {
 				{
 					backgroundColor: color,
 				},
-				props.disabled && { opacity: 0.5 },
+				disabled && { opacity: 0.5 },
 			]}
 		>
-			<Stack spacing={16}>
+			<Stack spacing={mainStackSpacing ?? 16}>
+				{children}
 				<RN.View style={styles.content}>
 					<Stack spacing={0} style={{ flex: 1 }}>
 						<RN.View style={styles.title}>
-							{props.headerIcon && (
+							{headerIcon && (
 								<RN.Image
 									style={styles.pluginIcon}
 									resizeMode="cover"
-									source={props.headerIcon}
+									source={headerIcon}
 								/>
 							)}
 							<Text
@@ -126,31 +144,32 @@ export default function Card(props: CardProps) {
 								ellipsis="tail"
 								style={{ flexShrink: 1 }}
 							>
-								{props.headerLabel}
+								{headerLabel}
 							</Text>
-							{props.headerSuffix}
+							{headerSuffix}
 						</RN.View>
-						{props.headerSublabel && (
+						{headerSublabel && (
 							<Text variant="text-md/semibold" color="TEXT_MUTED">
-								{props.headerSublabel}
+								{headerSublabel}
 							</Text>
 						)}
+						{contentAfterSublabel}
 					</Stack>
 					<RN.View>
 						<Stack spacing={5} direction="horizontal">
-							{props.actions?.map(
+							{actions?.map(
 								({
 									label,
 									icon,
 									onPress,
 									isDestructive,
 									loading,
-									disabled,
+									disabled: actionDisabled,
 								}) => (
 									<IconButton
 										key={label}
 										onPress={onPress}
-										disabled={disabled}
+										disabled={actionDisabled}
 										loading={loading}
 										size="sm"
 										variant={isDestructive
@@ -160,22 +179,22 @@ export default function Card(props: CardProps) {
 									/>
 								),
 							)}
-							{props.overflowActions && (
+							{overflowActions && (
 								<IconButton
 									onPress={() => {
 										showSimpleActionSheet({
 											key: "CardOverflow",
 											header: {
-												title: props.overflowTitle,
-												icon: props.headerIcon
-													&& props.headerIcon && (
+												title: overflowTitle,
+												icon: headerIcon
+													&& headerIcon && (
 													<FormRow.Icon
-														source={props.headerIcon}
+														source={headerIcon}
 													/>
 												),
 												onClose: hideActionSheet,
 											},
-											options: props.overflowActions?.map(
+											options: overflowActions?.map(
 												i => ({
 													...i,
 													icon: getAssetIDByName(
@@ -195,9 +214,9 @@ export default function Card(props: CardProps) {
 						</Stack>
 					</RN.View>
 				</RN.View>
-				{props.descriptionLabel && (
+				{descriptionLabel && (
 					<Text variant="text-md/medium" color={compatColors.TEXT_DEFAULT}>
-						{props.descriptionLabel}
+						{descriptionLabel}
 					</Text>
 				)}
 			</Stack>
