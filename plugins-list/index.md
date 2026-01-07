@@ -1,6 +1,6 @@
 ---
 title: Plugins List (by nexpid, Purple_Ξye™)
-description: A modified version of Nexpid's plugin browser that uses https://plugins-list.pages.dev as source.
+description: Browse plugins & themes from https://plugins-list.pages.dev/ - Fork of Nexpid's Plugin Browser
 ---
 
 <!--
@@ -10,7 +10,7 @@ description: A modified version of Nexpid's plugin browser that uses https://plu
 
 <div align="center">
 <h1>Plugins List (by nexpid, Purple_Ξye™)</h1>
-<h3>A modified version of Nexpid's plugin browser that uses https://plugins-list.pages.dev as source.</h3>
+<h3>Browse plugins & themes from https://plugins-list.pages.dev/ - Fork of Nexpid's Plugin Browser</h3>
 </div>
 
 > **Note**
