@@ -8,6 +8,10 @@ fillers: {
 "toast.plugin.delete.fail": { "plugin": string }
 "toast.plugin.install.success": { "plugin": string }
 "toast.plugin.install.fail": { "plugin": string }
+"toast.theme.delete.success": { "theme": string }
+"toast.theme.delete.fail": { "theme": string }
+"toast.theme.install.success": { "theme": string }
+"toast.theme.install.fail": { "theme": string }
 };
 };
 };

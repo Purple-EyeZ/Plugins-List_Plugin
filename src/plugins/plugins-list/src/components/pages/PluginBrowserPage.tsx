@@ -6,6 +6,7 @@ import { safeFetch } from "@vendetta/utils";
 import fuzzysort from "fuzzysort";
 import type { TextInput } from "react-native";
 
+import SegmentedControl from "$/components/SegmentedControl";
 import { FlashList, Reanimated } from "$/deps";
 import { IconButton } from "$/lib/redesign";
 import { managePage } from "$/lib/ui";
@@ -13,23 +14,15 @@ import { managePage } from "$/lib/ui";
 import { lang } from "../..";
 import { getChanges, run as runPluginChecker, updateChanges } from "../../stuff/pluginChecker";
 import { properLink } from "../../stuff/util";
-import type { FullPlugin } from "../../types";
+import { type FullPlugin, Sort } from "../../types";
 import InfoCard from "../InfoCard";
 import PluginCard from "../PluginCard";
 import Search from "../Search";
-
-export enum Sort {
-	DateNewest = "sheet.sort.date_newest",
-	DateOldest = "sheet.sort.date_oldest",
-	NameAZ = "sheet.sort.name_az",
-	NameZA = "sheet.sort.name_za",
-	WorkingFirst = "sheet.sort.working_first",
-	BrokenFirst = "sheet.sort.broken_first",
-}
+import ThemeBrowserPage from "./ThemeBrowserPage";
 
 const AnimatedIconButton = Reanimated.default.createAnimatedComponent(IconButton);
 
-export default () => {
+const PluginsPage = () => {
 	const [parsed, setParsed] = React.useState<FullPlugin[] | null>(null);
 	const [search, setSearch] = React.useState("");
 
@@ -220,7 +213,24 @@ export default () => {
 					onRefresh={() => parsed !== null && setParsed(null)}
 				/>
 			}
-			onScroll={e => setScrolledPast(e.nativeEvent.contentOffset.y >= 195)}
+			onScroll={e => setScrolledPast(e.nativeEvent.contentOffset.y >= 210)}
 		/>
 	);
+};
+
+export default () => {
+	const items = [
+		{
+			id: "plugins",
+			label: "Plugins",
+			page: <PluginsPage />,
+		},
+		{
+			id: "themes",
+			label: "Themes",
+			page: <ThemeBrowserPage />,
+		},
+	];
+
+	return <SegmentedControl items={items} />;
 };

@@ -15,6 +15,11 @@
 	"sheet.plugin.copy_proxied_link": "Copy proxied plugin link",
 	"sheet.plugin.copy_unproxied_link": "Copy unproxied plugin link",
 
+	"sheet.theme.install": "Install theme",
+	"sheet.theme.uninstall": "Uninstall theme",
+	"sheet.theme.copy_theme_link": "Copy theme link",
+	"sheet.theme.open_github": "Open theme in GitHub",
+
 	"settings.danger_zone.title": "Danger zone",
 	"settings.danger_zone.description": "Always install and manage plugins using their unproxied links",
 
@@ -34,5 +39,11 @@
 	"toast.plugin.install.success": "Installed {plugin}!",
 	"toast.plugin.install.fail": "Failed to install {plugin}!",
 	"toast.data.fail_fetch": "Failed to fetch plugins!",
-	"toast.data.fail_parse": "Failed to parse plugins!"
+	"toast.data.fail_parse": "Failed to parse plugins!",
+	
+	"toast.theme.delete.success": "Deleted {theme}!",
+	"toast.theme.delete.fail": "Failed to delete {theme}!",
+	"toast.theme.install.success": "Installed {theme}!",
+	"toast.theme.install.fail": "Failed to install {theme}!",
+	"toast.data.theme.fail_fetch": "Failed to fetch themes!"
 }
