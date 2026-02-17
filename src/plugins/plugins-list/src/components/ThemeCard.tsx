@@ -202,9 +202,7 @@ export default function ThemeCard({ item }: { item: FullTheme }) {
 									lang.format("toast.open_link", {}),
 									getAssetIDByName("LinkExternalSmallIcon"),
 								);
-								if (await RN.Linking.canOpenURL(githubLink)) {
-									RN.Linking.openURL(githubLink);
-								}
+								RN.Linking.openURL(githubLink);
 							},
 						},
 					]

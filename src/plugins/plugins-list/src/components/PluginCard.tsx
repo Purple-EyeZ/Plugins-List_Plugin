@@ -162,8 +162,11 @@ export default function PluginCard({
 	return (
 		<Card
 			headerLabel={item.name}
-			headerSuffix={
-				<RN.View style={{ flexDirection: "row", alignItems: "center" }}>
+			headerSublabel={item.authors && item.authors.length > 0
+				? `by ${item.authors.join(", ")}`
+				: undefined}
+			contentAfterSublabel={
+				<RN.View style={{ flexDirection: "row", alignItems: "center", marginTop: 4 }}>
 					{item.status && (
 						<TextBadge
 							variant={getStatusVariant(item.status)}
@@ -184,9 +187,6 @@ export default function PluginCard({
 				</RN.View>
 			}
 			highlight={!!isNew}
-			headerSublabel={item.authors && item.authors.length > 0
-				? `by ${item.authors.join(", ")}`
-				: undefined}
 			descriptionLabel={item.description}
 			overflowTitle={item.name}
 			actions={[
@@ -230,9 +230,7 @@ export default function PluginCard({
 									lang.format("toast.open_link", {}),
 									getAssetIDByName("LinkExternalSmallIcon"),
 								);
-								if (await RN.Linking.canOpenURL(githubLink)) {
-									RN.Linking.openURL(githubLink);
-								}
+								RN.Linking.openURL(githubLink);
 							},
 						},
 					]
