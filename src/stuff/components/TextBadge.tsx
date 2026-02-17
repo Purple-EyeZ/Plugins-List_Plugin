@@ -59,20 +59,20 @@ export default function TextBadge({
 	const finalVariant = variant ?? "primary";
 	const variantColors = {
 		primary: {
-			background: semanticColors.REDESIGN_BUTTON_PRIMARY_BACKGROUND,
-			text: semanticColors.REDESIGN_BUTTON_PRIMARY_TEXT,
+			background: semanticColors.CONTROL_PRIMARY_BACKGROUND_DEFAULT,
+			text: "CONTROL_PRIMARY_TEXT_DEFAULT",
 		},
 		danger: {
-			background: "#F44336",
-			text: "#ffffff",
+			background: semanticColors.STATUS_DANGER,
+			text: "CONTROL_CRITICAL_PRIMARY_TEXT_DEFAULT",
 		},
 		success: {
-			background: "#2DB132",
-			text: "#ffffff",
+			background: semanticColors.STATUS_POSITIVE,
+			text: "STATUS_POSITIVE_TEXT",
 		},
 		warning: {
-			background: "#FF9800",
-			text: "#ffffff",
+			background: semanticColors.STATUS_WARNING,
+			text: "STATUS_WARNING_TEXT",
 		},
 	};
 
@@ -85,7 +85,6 @@ export default function TextBadge({
 			paddingHorizontal: 6,
 			paddingVertical: 3,
 			backgroundColor: variantColors[finalVariant].background,
-			color: variantColors[finalVariant].text,
 			marginTop: 3,
 			overflow: "hidden",
 		},
@@ -144,8 +143,8 @@ export default function TextBadge({
 			)}
 			<Text
 				variant="text-xxs/bold"
-				color="REDESIGN_BUTTON_DESTRUCTIVE_TEXT"
 				align="center"
+				color={variantColors[finalVariant].text}
 				style={{
 					textTransform: "uppercase",
 				}}

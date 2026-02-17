@@ -27,7 +27,7 @@ const styles = stylesheet.createThemedStyleSheet({
 	},
 	content: {
 		flexDirection: "row",
-		alignItems: "center",
+		alignItems: "flex-start",
 		flex: 1,
 	},
 	title: {
