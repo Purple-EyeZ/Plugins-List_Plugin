@@ -114,18 +114,38 @@ export default function ThemeCard({ item }: { item: FullTheme }) {
 			),
 		);
 
-		imageRef.current.measure((_x, _y, width, height, pageX, pageY) => {
+		imageRef.current.measure((_x, _y, containerWidth, containerHeight, pageX, pageY) => {
+			const image = sources[0];
+			if (!image || image.width === 0 || image.height === 0) return;
+
+			const imageRatio = image.width / image.height;
+			const containerRatio = containerWidth / containerHeight;
+
+			let renderWidth = containerWidth;
+			let renderHeight = containerHeight;
+			let renderX = pageX;
+			let renderY = pageY;
+
+			if (imageRatio > containerRatio) {
+				renderHeight = containerWidth / imageRatio;
+				renderY += (containerHeight - renderHeight) / 2;
+			} else {
+				renderWidth = containerHeight * imageRatio;
+				renderX += (containerWidth - renderWidth) / 2;
+			}
+
 			openMediaModal({
-				initialSources: sources,
+				disableDownload: true,
+				disableMediaOverlayButton: true,
 				initialIndex: 0,
-				originLayout: {
-					x: pageX,
-					y: pageY,
-					width,
-					height,
+				initialSources: sources,
+				originViewOrOriginLayout: {
+					x: renderX,
+					y: renderY,
+					width: renderWidth,
+					height: renderHeight,
 					resizeMode: "cover",
 				},
-				disableMediaOverlayButton: true,
 			});
 		});
 	};
