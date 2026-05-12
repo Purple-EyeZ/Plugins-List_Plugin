@@ -36,6 +36,8 @@ export function patchTabsUI(tabs: PinToSettingsTabs, patches: (() => void)[]) {
 	const row = {
 		[tabs.key]: {
 			type: "pressable",
+			useTitle: tabs.title,
+			// `title` kept for backward compatibility
 			title: tabs.title,
 			icon: tabs.icon,
 			IconComponent: tabs.icon && (() => {
